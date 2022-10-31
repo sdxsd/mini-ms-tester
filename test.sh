@@ -44,19 +44,29 @@ test-minishell () {
 	if test -f $mspath;
 	then
 		echo "+--- BUILTINS ---+"
-		sleep 0.5
+		sleep 1
 		$mspath < test-files/cd.txt
-		sleep 0.5
+		echo
+		sleep 1
 		$mspath < test-files/env.txt
-		sleep 0.5
+		echo
+		sleep 1
 		$mspath < test-files/pwd.txt
-		sleep 0.5
+		echo
+		sleep 1
 		echo "+--- SINGULAR COMMANDS ---+"
-		sleep 0.5
+		echo
+		sleep 1
 		$mspath < test-files/ls.txt
-		sleep 0.5
+		echo
+		sleep 1
 		$mspath < test-files/cat.txt
-		sleep 0.5
+		echo
+		sleep 1
+		echo "+--- RMDIR TEST ---+"
+		echo
+		sleep 1
+		$mspath < test-files/rmdir-test.txt
 		if test -f "custom.txt"
 		then
 			custom-tests
