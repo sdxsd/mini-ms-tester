@@ -1,3 +1,0 @@
-cd sample-txt
-ls -la
-cat cat-me.txt

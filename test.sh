@@ -24,21 +24,43 @@ cat << 'eof'
 eof
 }
 
+custom-tests () {
+	echo "Custom tests:"
+	$mspath < test-files/custom.txt
+}
+
 test-minishell () {
 	splash
+
 	if test -f "config";
 	then
 		mspath=$(< config)
 	else
-	echo "Enter path to minishell binary:"
-	read mspath
-	echo $mspath > config
+		echo "Enter path to minishell binary:"
+		read mspath
+		echo $mspath > config
 	fi
+
 	if test -f $mspath;
 	then
-		echo "Basic:"
-		$mspath < test-files/test-1.txt
-		echo "Done."
+		echo "+--- BUILTINS ---+"
+		sleep 0.5
+		$mspath < test-files/cd.txt
+		sleep 0.5
+		$mspath < test-files/env.txt
+		sleep 0.5
+		$mspath < test-files/pwd.txt
+		sleep 0.5
+		echo "+--- SINGULAR COMMANDS ---+"
+		sleep 0.5
+		$mspath < test-files/ls.txt
+		sleep 0.5
+		$mspath < test-files/cat.txt
+		sleep 0.5
+		if test -f "custom.txt"
+		then
+			custom-tests
+		fi
 	else
 		echo "Minishell executable doesn't exist. Invalid path or has not been compiled."
 		echo "Run test.sh again to proceed."
