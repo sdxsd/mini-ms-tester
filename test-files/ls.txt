@@ -1,2 +1,2 @@
-ls -la
+ls -la test-files
 ls /

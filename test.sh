@@ -24,6 +24,18 @@ cat << 'eof'
 eof
 }
 
+run-test () {
+	local test_path=test-files/$1.txt
+
+	$mspath < $test_path &> /tmp/minishell_output
+	echo $? >> /tmp/minishell_output
+
+	bash < $test_path &> /tmp/bash_output
+	echo $? >> /tmp/bash_output
+
+	diff /tmp/minishell_output /tmp/bash_output
+}
+
 custom-tests () {
 	echo "Custom tests:"
 	$mspath < test-files/custom.txt
@@ -43,30 +55,37 @@ test-minishell () {
 
 	if test -f $mspath;
 	then
-		echo "+--- BUILTINS ---+"
-		sleep 1
-		$mspath < test-files/cd.txt
-		echo
-		sleep 1
-		$mspath < test-files/env.txt
-		echo
-		sleep 1
-		$mspath < test-files/pwd.txt
-		echo
-		sleep 1
-		echo "+--- SINGULAR COMMANDS ---+"
-		echo
-		sleep 1
-		$mspath < test-files/ls.txt
-		echo
-		sleep 1
-		$mspath < test-files/cat.txt
-		echo
-		sleep 1
-		echo "+--- RMDIR TEST ---+"
-		echo
-		sleep 1
-		$mspath < test-files/rmdir-test.txt
+		run-test cat
+		run-test ls
+		run-test nothing
+		# run-test rmdir-test
+
+		# echo "+--- BUILTINS ---+"
+		# sleep 1
+		# $mspath < test-files/builtins/cd.txt
+		# echo
+		# sleep 1
+		# $mspath < test-files/builtins/env.txt | grep -v   > foo
+		# $mspath < test-files/builtins/env.txt | grep -v "λ" | sort > foo
+		# echo
+		# sleep 1
+		# $mspath < test-files/builtins/pwd.txt &> foo
+		# echo
+		# sleep 1
+		# echo "+--- SINGULAR COMMANDS ---+"
+		# echo
+		# sleep 1
+		# $mspath < test-files/ls.txt
+		# echo
+		# sleep 1
+		# $mspath < test-files/cat.txt
+		# echo
+		# sleep 1
+		# echo "+--- RMDIR TEST ---+"
+		# echo
+		# sleep 1
+		# $mspath < test-files/rmdir-test.txt
+
 		if test -f "custom.txt"
 		then
 			custom-tests
