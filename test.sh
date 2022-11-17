@@ -21,7 +21,31 @@ cat << 'eof'
    [38;5;118m/ [38;5;20m/ [38;5;240m%[38;5;20m%%%%[38;5;240m%;,    [38;5;255m\[38;5;240m%[38;5;20m%[38;5;255ml[38;5;240m%%;// _/[38;5;20m%;,[0m [38;5;234mdmr[0m
  [38;5;20m/    [38;5;240m%[38;5;20m%%;,[0m         [38;5;255m<[38;5;20m;[38;5;240m\-=-/ /[0m
      [38;5;20m;,[0m                [38;5;240ml[0m
+
 eof
+}
+
+CLEAR="\033[0m"
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+BLUE="\033[0;34m"
+
+run-test () {
+	local test_path=test-files/$1.txt
+
+	$mspath < $test_path &> /tmp/minishell_output
+	echo $? >> /tmp/minishell_output
+
+	bash < $test_path &> /tmp/bash_output
+	echo $? >> /tmp/bash_output
+
+	diff /tmp/minishell_output /tmp/bash_output > /tmp/diff_output
+	if [ -s /tmp/diff_output ]
+	then
+		printf "${RED}Different output${CLEAR} in test '${GREEN}$1${CLEAR}' on ${BLUE}line $BASH_LINENO${CLEAR}:\n" >&2
+		cat /tmp/diff_output >&2
+		exit
+	fi
 }
 
 custom-tests () {
@@ -43,30 +67,37 @@ test-minishell () {
 
 	if test -f $mspath;
 	then
-		echo "+--- BUILTINS ---+"
-		sleep 1
-		$mspath < test-files/cd.txt
-		echo
-		sleep 1
-		$mspath < test-files/env.txt
-		echo
-		sleep 1
-		$mspath < test-files/pwd.txt
-		echo
-		sleep 1
-		echo "+--- SINGULAR COMMANDS ---+"
-		echo
-		sleep 1
-		$mspath < test-files/ls.txt
-		echo
-		sleep 1
-		$mspath < test-files/cat.txt
-		echo
-		sleep 1
-		echo "+--- RMDIR TEST ---+"
-		echo
-		sleep 1
-		$mspath < test-files/rmdir-test.txt
+		run-test cat
+		run-test ls
+		run-test nothing
+		run-test rmdir-test
+
+		# echo "+--- BUILTINS ---+"
+		# sleep 1
+		# $mspath < test-files/builtins/cd.txt
+		# echo
+		# sleep 1
+		# $mspath < test-files/builtins/env.txt | grep -v   > foo
+		# $mspath < test-files/builtins/env.txt | grep -v "λ" | sort > foo
+		# echo
+		# sleep 1
+		# $mspath < test-files/builtins/pwd.txt &> foo
+		# echo
+		# sleep 1
+		# echo "+--- SINGULAR COMMANDS ---+"
+		# echo
+		# sleep 1
+		# $mspath < test-files/ls.txt
+		# echo
+		# sleep 1
+		# $mspath < test-files/cat.txt
+		# echo
+		# sleep 1
+		# echo "+--- RMDIR TEST ---+"
+		# echo
+		# sleep 1
+		# $mspath < test-files/rmdir-test.txt
+
 		if test -f "custom.txt"
 		then
 			custom-tests
@@ -76,6 +107,8 @@ test-minishell () {
 		echo "Run test.sh again to proceed."
 		rm config
 	fi
+
+	echo "All tests passed! 🎉"
 }
 
 test-minishell
