@@ -71,10 +71,6 @@ run-test () {
 test-minishell () {
 	splash
 
-	if [ $1 = "-eof" ]
-	then
-		END_ON_FAIL=1
-	fi
 	if test -f "config";
 	then
 		mspath=$(< config)
@@ -105,4 +101,12 @@ test-minishell () {
 	fi
 }
 
-test-minishell $1
+# Checks if argument has been passed.
+if [ $# -eq 1 ]
+then
+	if [ $1 = "-eof" ]
+	then
+		END_ON_FAIL=1
+	fi
+fi
+test-minishell
