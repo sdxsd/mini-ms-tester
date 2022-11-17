@@ -30,7 +30,12 @@ RED="\033[0;31m"
 GREEN="\033[0;32m"
 BLUE="\033[0;34m"
 
+TESTS_FAILED=0
+TESTS_PASSED=0
+TOTAL_NTESTS=0
+
 run-test () {
+	((++TOTAL_NTESTS))
 	local test_path=test-files/$1.txt
 
 	$mspath < $test_path &> /tmp/minishell_output
@@ -44,13 +49,11 @@ run-test () {
 	then
 		printf "${RED}Different output${CLEAR} in test '${GREEN}$1${CLEAR}' on ${BLUE}line $BASH_LINENO${CLEAR}:\n" >&2
 		cat /tmp/diff_output >&2
-		exit
+		((++TESTS_FAILED))
+	else
+		printf "[${GREEN}✔${CLEAR}] in test '${GREEN}$1${CLEAR}'\n"
+		((++TESTS_PASSED))
 	fi
-}
-
-custom-tests () {
-	echo "Custom tests:"
-	$mspath < test-files/custom.txt
 }
 
 test-minishell () {
@@ -71,44 +74,23 @@ test-minishell () {
 		run-test ls
 		run-test nothing
 		run-test rmdir-test
-
-		# echo "+--- BUILTINS ---+"
-		# sleep 1
-		# $mspath < test-files/builtins/cd.txt
-		# echo
-		# sleep 1
-		# $mspath < test-files/builtins/env.txt | grep -v   > foo
-		# $mspath < test-files/builtins/env.txt | grep -v "λ" | sort > foo
-		# echo
-		# sleep 1
-		# $mspath < test-files/builtins/pwd.txt &> foo
-		# echo
-		# sleep 1
-		# echo "+--- SINGULAR COMMANDS ---+"
-		# echo
-		# sleep 1
-		# $mspath < test-files/ls.txt
-		# echo
-		# sleep 1
-		# $mspath < test-files/cat.txt
-		# echo
-		# sleep 1
-		# echo "+--- RMDIR TEST ---+"
-		# echo
-		# sleep 1
-		# $mspath < test-files/rmdir-test.txt
-
-		if test -f "custom.txt"
+		if test -f "test-files/custom"
 		then
-			custom-tests
+			run-test custom
 		fi
 	else
 		echo "Minishell executable doesn't exist. Invalid path or has not been compiled."
 		echo "Run test.sh again to proceed."
 		rm config
 	fi
-
-	echo "All tests passed! 🎉"
+	if [ $TESTS_PASSED -ne $TOTAL_NTESTS ]
+	then
+		printf "\n${RED}KO! ${CLEAR}"
+		printf "[${GREEN}Tests passed: $TESTS_PASSED/$TOTAL_NTESTS${CLEAR}] :: "
+		printf "[${RED}Tests failed: $TESTS_FAILED/$TOTAL_NTESTS${CLEAR}]\n"
+	else
+		printf "\nAll [${GREEN}$TOTAL_NTESTS${CLEAR}] tests passed! 🚀\n"
+	fi
 }
 
 test-minishell
