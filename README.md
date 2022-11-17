@@ -2,6 +2,8 @@
 Lightweight tester for the minishell project.
 This project aims to automate the process of testing minishell during development.
 
+![Example Image](example.png "Usage example")
+
 # Use
 1. Clone repo
 2. Execute test.sh
