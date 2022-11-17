@@ -39,14 +39,11 @@ TESTS_FAILED=0
 TESTS_PASSED=0
 TOTAL_NTESTS=0
 
-# TESTS
-TESTS=($(ls test-files))
-
 run-test () {
-	local test_path=test-files/$1
+	local test_path=$CATEGORY$1
 
 	((++TOTAL_NTESTS))
-	$mspath < $test_path &> /tmp/minishell_output
+	../$mspath < $test_path &> /tmp/minishell_output
 	echo $? >> /tmp/minishell_output
 
 	bash < $test_path &> /tmp/bash_output
@@ -82,15 +79,23 @@ test-minishell () {
 
 	if test -f $mspath;
 	then
-		for TEST in ${TESTS[@]}
+		cd test-files
+		TEST_CATEGORIES=($(ls -d */))
+		for CATEGORY in ${TEST_CATEGORIES[@]}
 		do
-			run-test $TEST
+			printf "${GREEN} === $CATEGORY\b === ${CLEAR}\n"
+			TESTS=$(ls $CATEGORY)
+			for TEST in ${TESTS[@]}
+			do
+				run-test $TEST
+			done
 		done
 	else
 		echo "Minishell executable doesn't exist. Invalid path or has not been compiled."
 		echo "Run test.sh again to proceed."
 		rm config
 	fi
+	cd ..
 	if [ $TESTS_PASSED -ne $TOTAL_NTESTS ]
 	then
 		printf "\n${RED}KO! ${CLEAR}"
