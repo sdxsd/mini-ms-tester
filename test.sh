@@ -29,7 +29,6 @@ eof
 CLEAR="\033[0m"
 RED="\033[0;31m"
 GREEN="\033[0;32m"
-BLUE="\033[0;34m"
 
 # OPTIONS
 END_ON_FAIL=0
@@ -52,7 +51,7 @@ run-test () {
 	diff /tmp/minishell_output /tmp/bash_output > /tmp/diff_output
 	if [ -s /tmp/diff_output ]
 	then
-		printf "${RED}Different output${CLEAR} in test '${GREEN}$1${CLEAR}' on ${BLUE}line $BASH_LINENO${CLEAR}:\n" >&2
+		printf "${RED}Different output${CLEAR} in test '${GREEN}$1${CLEAR}'${CLEAR}:\n" >&2
 		cat /tmp/diff_output >&2
 		((++TESTS_FAILED))
 		if [ $END_ON_FAIL -eq 1 ]
