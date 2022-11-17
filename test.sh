@@ -49,8 +49,12 @@ run-test () {
 	echo $? >> /tmp/bash_output
 
 	diff /tmp/minishell_output /tmp/bash_output > /tmp/diff_output
-	if [ -s /tmp/diff_output ]
+
+	if [ $? -eq 0 ]
 	then
+		printf "[${GREEN}✔${CLEAR}] in test '${GREEN}$1${CLEAR}'\n"
+		((++TESTS_PASSED))
+	else
 		printf "${RED}Different output${CLEAR} in test '${GREEN}$1${CLEAR}'${CLEAR}:\n" >&2
 		cat /tmp/diff_output >&2
 		((++TESTS_FAILED))
@@ -58,9 +62,6 @@ run-test () {
 		then
 			exit
 		fi
-	else
-		printf "[${GREEN}✔${CLEAR}] in test '${GREEN}$1${CLEAR}'\n"
-		((++TESTS_PASSED))
 	fi
 }
 
