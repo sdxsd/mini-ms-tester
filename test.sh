@@ -21,8 +21,14 @@ cat << 'eof'
    [38;5;118m/ [38;5;20m/ [38;5;240m%[38;5;20m%%%%[38;5;240m%;,    [38;5;255m\[38;5;240m%[38;5;20m%[38;5;255ml[38;5;240m%%;// _/[38;5;20m%;,[0m [38;5;234mdmr[0m
  [38;5;20m/    [38;5;240m%[38;5;20m%%;,[0m         [38;5;255m<[38;5;20m;[38;5;240m\-=-/ /[0m
      [38;5;20m;,[0m                [38;5;240ml[0m
+
 eof
 }
+
+CLEAR="\033[0m"
+RED="\033[0;31m"
+GREEN="\033[0;32m"
+BLUE="\033[0;34m"
 
 run-test () {
 	local test_path=test-files/$1.txt
@@ -36,7 +42,8 @@ run-test () {
 	diff /tmp/minishell_output /tmp/bash_output > /tmp/diff_output
 	if [ -s /tmp/diff_output ]
 	then
-		echo "Error in test '$1' on line $BASH_LINENO" >&2
+		printf "${RED}Different output${CLEAR} in test '${GREEN}$1${CLEAR}' on ${BLUE}line $BASH_LINENO${CLEAR}:\n" >&2
+		cat /tmp/diff_output >&2
 		exit
 	fi
 }
