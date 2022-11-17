@@ -1,0 +1,2 @@
+ls > /tmp/abc
+cat /tmp/abc
