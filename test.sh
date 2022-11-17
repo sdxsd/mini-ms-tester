@@ -33,7 +33,12 @@ run-test () {
 	bash < $test_path &> /tmp/bash_output
 	echo $? >> /tmp/bash_output
 
-	diff /tmp/minishell_output /tmp/bash_output
+	diff /tmp/minishell_output /tmp/bash_output > /tmp/diff_output
+	if [ -s /tmp/diff_output ]
+	then
+		echo "Error in test '$1' on line $BASH_LINENO" >&2
+		exit
+	fi
 }
 
 custom-tests () {
@@ -58,7 +63,7 @@ test-minishell () {
 		run-test cat
 		run-test ls
 		run-test nothing
-		# run-test rmdir-test
+		run-test rmdir-test
 
 		# echo "+--- BUILTINS ---+"
 		# sleep 1
@@ -95,6 +100,8 @@ test-minishell () {
 		echo "Run test.sh again to proceed."
 		rm config
 	fi
+
+	echo "All tests passed! 🎉"
 }
 
 test-minishell
