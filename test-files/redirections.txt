@@ -1,0 +1,3 @@
+ls | cat
+ls / | grep bin
+cat sample-txt/cat-me.txt | grep cat | wc -w

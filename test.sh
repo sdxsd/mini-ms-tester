@@ -34,10 +34,12 @@ TESTS_FAILED=0
 TESTS_PASSED=0
 TOTAL_NTESTS=0
 
-run-test () {
-	((++TOTAL_NTESTS))
-	local test_path=test-files/$1.txt
+TESTS=($(ls test-files))
 
+run-test () {
+	local test_path=test-files/$1
+
+	((++TOTAL_NTESTS))
 	$mspath < $test_path &> /tmp/minishell_output
 	echo $? >> /tmp/minishell_output
 
@@ -70,14 +72,10 @@ test-minishell () {
 
 	if test -f $mspath;
 	then
-		run-test cat
-		run-test ls
-		run-test nothing
-		run-test rmdir-test
-		if test -f "test-files/custom"
-		then
-			run-test custom
-		fi
+		for TEST in ${TESTS[@]}
+		do
+			run-test $TEST
+		done
 	else
 		echo "Minishell executable doesn't exist. Invalid path or has not been compiled."
 		echo "Run test.sh again to proceed."
