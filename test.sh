@@ -42,10 +42,10 @@ run-test () {
 	local test_path=$CATEGORY$1
 
 	((++TOTAL_NTESTS))
-	../$mspath < $test_path &> /tmp/minishell_output
+	< $test_path $mspath &> /tmp/minishell_output
 	echo $? >> /tmp/minishell_output
 
-	bash < $test_path &> /tmp/bash_output
+	< $test_path bash &> /tmp/bash_output
 	echo $? >> /tmp/bash_output
 
 	diff /tmp/minishell_output /tmp/bash_output > /tmp/diff_output
