@@ -25,15 +25,21 @@ cat << 'eof'
 eof
 }
 
+# COLOURS
 CLEAR="\033[0m"
 RED="\033[0;31m"
 GREEN="\033[0;32m"
 BLUE="\033[0;34m"
 
+# OPTIONS
+END_ON_FAIL=0
+
+# COUNTERS
 TESTS_FAILED=0
 TESTS_PASSED=0
 TOTAL_NTESTS=0
 
+# TESTS
 TESTS=($(ls test-files))
 
 run-test () {
@@ -52,6 +58,10 @@ run-test () {
 		printf "${RED}Different output${CLEAR} in test '${GREEN}$1${CLEAR}' on ${BLUE}line $BASH_LINENO${CLEAR}:\n" >&2
 		cat /tmp/diff_output >&2
 		((++TESTS_FAILED))
+		if [ $END_ON_FAIL -eq 1 ]
+		then
+			exit
+		fi
 	else
 		printf "[${GREEN}✔${CLEAR}] in test '${GREEN}$1${CLEAR}'\n"
 		((++TESTS_PASSED))
@@ -61,6 +71,10 @@ run-test () {
 test-minishell () {
 	splash
 
+	if [ $1 = "-eof" ]
+	then
+		END_ON_FAIL=1
+	fi
 	if test -f "config";
 	then
 		mspath=$(< config)
@@ -91,4 +105,4 @@ test-minishell () {
 	fi
 }
 
-test-minishell
+test-minishell $1
