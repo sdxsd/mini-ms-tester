@@ -65,7 +65,7 @@ run-test () {
 	echo $? >> /tmp/bash_output
 	< /tmp/bash_output sed -i "" -E "s/bash: line [0-9]+/λ/g" /tmp/bash_output
 
-	diff /tmp/minishell_output /tmp/bash_output > /tmp/diff_output
+	diff -y /tmp/minishell_output /tmp/bash_output > /tmp/diff_output
 
 	if [ $? -eq 0 ]
 	then
