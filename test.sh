@@ -38,6 +38,22 @@ TESTS_FAILED=0
 TESTS_PASSED=0
 TOTAL_NTESTS=0
 
+exports () {
+	export dollar_in_env='a$b'
+	export no_whitespace="no_whitespace"
+
+	export whitespace_left=" whitespace"
+	export whitespace_center="white space"
+	export whitespace_right="whitespace "
+
+	export empty=""
+	export space=" "
+}
+
+compile-programs () {
+	gcc -Wall -Wextra -Werror -g programs/argv.c -o programs/argv
+}
+
 run-test () {
 	local test_path=$CATEGORY$1
 
@@ -79,6 +95,10 @@ test-minishell () {
 
 	if test -f $mspath;
 	then
+		exports
+
+		compile-programs
+
 		cd test-files
 		TEST_CATEGORIES=($(ls -d */))
 		for CATEGORY in ${TEST_CATEGORIES[@]}
