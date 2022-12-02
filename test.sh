@@ -63,6 +63,7 @@ run-test () {
 
 	< $test_path bash &> /tmp/bash_output
 	echo $? >> /tmp/bash_output
+	< /tmp/bash_output sed -i "" -E "s/bash: line [0-9]+/λ/g" /tmp/bash_output
 
 	diff /tmp/minishell_output /tmp/bash_output > /tmp/diff_output
 
