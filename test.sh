@@ -70,6 +70,10 @@ run-test () {
 	# This makes it so the tester isn't required to have the bash prefix nor line number
 	< $results_path/bash_output sed -i "" -E "s/bash: line [0-9]+/λ/g" $results_path/bash_output
 
+	# TODO: This is choosing to ignore the special bash `_` parameter; discuss whether this is desired
+	< $results_path/minishell_output sed -i "" -E "s/_=.*/_=IGNORED/g" $results_path/minishell_output
+	< $results_path/bash_output sed -i "" -E "s/_=.*/_=IGNORED/g" $results_path/bash_output
+
 	diff -y $results_path/minishell_output $results_path/bash_output > $results_path/diff_output
 
 	if [ $? -eq 0 ]
