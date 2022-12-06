@@ -1,0 +1,1 @@
+echo a > "foo"" bar"$whitespace_left

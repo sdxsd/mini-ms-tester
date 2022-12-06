@@ -1,0 +1,2 @@
+echo a > "c"$foo"d"
+rm cd

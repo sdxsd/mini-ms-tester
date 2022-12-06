@@ -1,0 +1,1 @@
+echo a > # syntax error near unexpected token `newline'

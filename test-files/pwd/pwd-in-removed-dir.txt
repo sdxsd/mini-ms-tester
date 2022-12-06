@@ -1,4 +1,4 @@
 mkdir /tmp/test
 cd /tmp/test
-pwd
 rmdir /tmp/test
+pwd

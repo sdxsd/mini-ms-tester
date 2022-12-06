@@ -1,0 +1,1 @@
+echo a > "" # bash: : No such file or directory

@@ -1,0 +1,2 @@
+echo a > "c"$empty"d"
+rm cd

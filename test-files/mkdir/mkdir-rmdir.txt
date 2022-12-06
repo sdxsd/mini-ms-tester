@@ -1,0 +1,2 @@
+mkdir /tmp/test
+rmdir /tmp/test

@@ -1,0 +1,2 @@
+echo a > $space$whitespace_left
+rm whitespace

@@ -1,0 +1,8 @@
+/Users/sbos/Documents/Programming/Project-Testers/mini-ms-tester/programs/argv 'foo'bar
+/Users/sbos/Documents/Programming/Project-Testers/mini-ms-tester/programs/argv "foo"bar
+/Users/sbos/Documents/Programming/Project-Testers/mini-ms-tester/programs/argv "foo" "bar"
+/Users/sbos/Documents/Programming/Project-Testers/mini-ms-tester/programs/argv "foo""bar"
+/Users/sbos/Documents/Programming/Project-Testers/mini-ms-tester/programs/argv 'foo' 'bar'
+/Users/sbos/Documents/Programming/Project-Testers/mini-ms-tester/programs/argv 'foo''bar'
+/Users/sbos/Documents/Programming/Project-Testers/mini-ms-tester/programs/argv "foo"'bar'
+/Users/sbos/Documents/Programming/Project-Testers/mini-ms-tester/programs/argv 'foo'"bar"

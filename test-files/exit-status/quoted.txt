@@ -1,0 +1,7 @@
+export a="$?"
+rm .
+echo $a
+
+export b='$?'
+rm .
+echo $b

@@ -1,0 +1,2 @@
+echo a > /tmp/foo
+cat /tmp/foo

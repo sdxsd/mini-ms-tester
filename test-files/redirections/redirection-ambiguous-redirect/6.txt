@@ -1,0 +1,1 @@
+echo a > $whitespace_right$no_whitespace

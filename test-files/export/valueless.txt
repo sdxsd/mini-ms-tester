@@ -1,0 +1,6 @@
+export FOO
+env | grep FOO
+
+export FOO=
+env | grep FOO
+unset FOO

@@ -1,0 +1,3 @@
+echo a > /tmp/foo
+echo b > /tmp/foo
+cat /tmp/foo
