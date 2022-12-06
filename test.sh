@@ -55,20 +55,22 @@ compile-programs () {
 }
 
 run-test () {
-	local test_path=$CATEGORY$1
+	local test_path=$1
 
 	((++TOTAL_NTESTS))
-	< $test_path ../$mspath &> /tmp/minishell_output
-	echo $? >> /tmp/minishell_output
-	# Shitty symlink patch
-	< /tmp/minishell_output sed -i "" -E "s/\/private\/tmp/\/tmp/g" /tmp/minishell_output
+	< $test_path ../$mspath &> $results_path/minishell_output
+	echo $? >> $results_path/minishell_output
 
-	< $test_path bash &> /tmp/bash_output
-	echo $? >> /tmp/bash_output
-	# Don't require bash prefix nor line number
-	< /tmp/bash_output sed -i "" -E "s/bash: line [0-9]+/λ/g" /tmp/bash_output
+	# TODO: Think of a proper fix for symlinking to replace this with
+	# < /tmp/minishell_output sed -i "" -E "s/\/private\/tmp/\/tmp/g" /tmp/minishell_output
 
-	diff -y /tmp/minishell_output /tmp/bash_output > /tmp/diff_output
+	< $test_path bash &> $results_path/bash_output
+	echo $? >> $results_path/bash_output
+
+	# This makes it so the tester isn't required to have the bash prefix nor line number
+	< $results_path/bash_output sed -i "" -E "s/bash: line [0-9]+/λ/g" $results_path/bash_output
+
+	diff -y $results_path/minishell_output $results_path/bash_output > $results_path/diff_output
 
 	if [ $? -eq 0 ]
 	then
@@ -76,8 +78,9 @@ run-test () {
 		((++TESTS_PASSED))
 	else
 		printf "${RED}Different output${CLEAR} in test '${GREEN}$1${CLEAR}'${CLEAR}:\n" >&2
-		cat /tmp/diff_output >&2
+		cat $results_path/diff_output >&2
 		((++TESTS_FAILED))
+
 		if [ $END_ON_FAIL -eq 1 ]
 		then
 			exit
@@ -104,15 +107,13 @@ test-minishell () {
 		compile-programs
 
 		cd test-files
-		TEST_CATEGORIES=($(ls -d */))
-		for CATEGORY in ${TEST_CATEGORIES[@]}
+
+		local results_path=../results
+		mkdir -p $results_path
+
+		for TEST in $(find * -type f)
 		do
-			printf "${GREEN} === $CATEGORY\b === ${CLEAR}\n"
-			TESTS=$(ls $CATEGORY)
-			for TEST in ${TESTS[@]}
-			do
-				run-test $TEST
-			done
+			run-test $TEST
 		done
 	else
 		echo "Minishell executable doesn't exist. Invalid path or has not been compiled."

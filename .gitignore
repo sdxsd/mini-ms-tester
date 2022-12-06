@@ -1,1 +1,7 @@
 config
+*.dSYM
+
+programs/*
+!programs/*.c
+
+results
