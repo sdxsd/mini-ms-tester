@@ -74,6 +74,10 @@ run-test () {
 	< $results_path/minishell_output sed -i "" -E "s/_=.*/_=IGNORED/g" $results_path/minishell_output
 	< $results_path/bash_output sed -i "" -E "s/_=.*/_=IGNORED/g" $results_path/bash_output
 
+	# TODO: This is choosing to ignore the SHLVL environment variable; discuss whether this is desired
+	< $results_path/minishell_output sed -i "" -E "s/SHLVL=.*/SHLVL=IGNORED/g" $results_path/minishell_output
+	< $results_path/bash_output sed -i "" -E "s/SHLVL=.*/SHLVL=IGNORED/g" $results_path/bash_output
+
 	diff -y $results_path/minishell_output $results_path/bash_output > $results_path/diff_output
 
 	if [ $? -eq 0 ]
