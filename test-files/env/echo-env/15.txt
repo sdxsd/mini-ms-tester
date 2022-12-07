@@ -1,1 +1,1 @@
-echo $x1
+echo 1$PATH-
