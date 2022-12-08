@@ -60,7 +60,7 @@ run-test () {
 	local test_path=$1
 
 	((++TOTAL_NTESTS))
-	< $test_path ../$mspath &> $results_path/minishell_output
+	< $test_path $mspath &> $results_path/minishell_output
 	echo $? >> $results_path/minishell_output
 
 	# TODO: Think of a proper fix for symlinking to replace this with
@@ -129,13 +129,18 @@ test-minishell () {
 
 		compile-programs
 
-		cd test-files
-		# cd prioritized-tests
+		local tester_path=$PWD
 
-		local results_path=../results
+		# This ensures that files wrongly created by minishell don't end up inside of this tester
+		cd /tmp
+
+		# Makes the diff files easy to inspect
+		local results_path=$tester_path/results
 		mkdir -p $results_path
 
-		for TEST in $(find * -type f)
+		local test_files_path=$tester_path/test-files
+
+		for TEST in $(find $test_files_path -type f)
 		do
 			run-test $TEST
 		done
