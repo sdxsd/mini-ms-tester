@@ -60,7 +60,7 @@ run-test () {
 	local test_path=$1
 
 	((++TOTAL_NTESTS))
-	< $test_path $mspath &> $results_path/minishell_output
+	< $test_path $minishell_dir_path/minishell &> $results_path/minishell_output
 	echo $? >> $results_path/minishell_output
 
 	# TODO: Think of a proper fix for symlinking to replace this with
@@ -111,52 +111,57 @@ run-test () {
 test-minishell () {
 	splash
 
-	if test -f "config";
-	then
-		mspath=$(< config)
-	else
-		echo "Enter path to minishell binary:"
-		read mspath
+	local tester_dir_path=$PWD
 
-		# This allows both relative and absolute paths
-		cd $mspath
-		pwd > config
+	if test -f "config"
+	then
+		minishell_dir_path=$(< config)
+	else
+		echo "Enter a relative or absolute path to your minishell directory:"
+		read minishell_dir_path
+
+		# Resolves relative paths and saves to config file
+		if test -f $minishell_dir_path/minishell
+		then
+			cd $minishell_dir_path
+			minishell_dir_path=$(pwd)
+			cd $tester_dir_path
+
+			echo $minishell_dir_path > config
+		fi
 	fi
 
-	if test -f $mspath;
+	if test -f $minishell_dir_path/minishell
 	then
 		exports
 
 		compile-programs
 
-		local tester_path=$PWD
-
 		# This ensures that files wrongly created by minishell don't end up inside of this tester
 		cd /tmp
 
-		# Makes the diff files easy to inspect
-		local results_path=$tester_path/results
+		# Makes the diff files easy to find
+		local results_path=$tester_dir_path/results
 		mkdir -p $results_path
 
-		local test_files_path=$tester_path/test-files
+		local test_files_path=$tester_dir_path/test-files
 
 		for TEST in $(find $test_files_path -type f)
 		do
 			run-test $TEST
 		done
+
+		if [ $TESTS_PASSED -ne $TOTAL_NTESTS ]
+		then
+			printf "\n${RED}KO! ${CLEAR}"
+			printf "[${GREEN}Tests passed: $TESTS_PASSED/$TOTAL_NTESTS${CLEAR}] :: "
+			printf "[${RED}Tests failed: $TESTS_FAILED/$TOTAL_NTESTS${CLEAR}]\n"
+		else
+			printf "\nAll [${GREEN}$TOTAL_NTESTS${CLEAR}] tests passed! 🚀\n"
+		fi
 	else
-		echo "Minishell executable doesn't exist. Invalid path or has not been compiled."
+		echo "A minishell executable doesn't exist at the provided directory path. Have you compiled minishell?"
 		echo "Run test.sh again to proceed."
-		rm config
-	fi
-	cd ..
-	if [ $TESTS_PASSED -ne $TOTAL_NTESTS ]
-	then
-		printf "\n${RED}KO! ${CLEAR}"
-		printf "[${GREEN}Tests passed: $TESTS_PASSED/$TOTAL_NTESTS${CLEAR}] :: "
-		printf "[${RED}Tests failed: $TESTS_FAILED/$TOTAL_NTESTS${CLEAR}]\n"
-	else
-		printf "\nAll [${GREEN}$TOTAL_NTESTS${CLEAR}] tests passed! 🚀\n"
 	fi
 }
 
