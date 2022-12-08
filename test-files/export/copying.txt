@@ -1,0 +1,7 @@
+export a=foo
+export b=$a
+echo $b
+
+export a=bar
+echo $a
+echo $b

@@ -1,0 +1,6 @@
+env | grep OLDPWD
+export | grep OLDPWD
+
+cd .
+env | grep OLDPWD
+export | grep OLDPWD
