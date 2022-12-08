@@ -80,6 +80,16 @@ run-test () {
 	perl -i -p -e "s/SHLVL=.*/SHLVL=IGNORED/g" $results_path/minishell_output
 	perl -i -p -e "s/SHLVL=.*/SHLVL=IGNORED/g" $results_path/bash_output
 
+	# This is choosing to ignore OLDPWD since it has really weird behavior in bash,
+	# like not being printed with `env` the first time, but being printed with `export` the first time:
+	# https://unix.stackexchange.com/questions/242909/why-does-bash-clear-oldpwd-when-a-child-script-is-started
+	# From running `export`
+	perl -i -p -e "s/declare -x OLDPWD.*/declare -x OLDPWD=IGNORED/g" $results_path/minishell_output
+	perl -i -p -e "s/declare -x OLDPWD.*/declare -x OLDPWD=IGNORED/g" $results_path/bash_output
+	# From running `env`
+	perl -i -p -e "s/OLDPWD=.*\n//" $results_path/minishell_output
+	perl -i -p -e "s/OLDPWD=.*\n//" $results_path/bash_output
+
 	diff -y $results_path/minishell_output $results_path/bash_output > $results_path/diff_output
 
 	if [ $? -eq 0 ]
@@ -117,6 +127,7 @@ test-minishell () {
 		compile-programs
 
 		cd test-files
+		# cd prioritized-tests
 
 		local results_path=../results
 		mkdir -p $results_path
