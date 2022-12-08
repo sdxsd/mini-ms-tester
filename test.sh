@@ -127,8 +127,17 @@ test-minishell () {
 			minishell_dir_path=$(pwd)
 			cd $tester_dir_path
 
-			echo $minishell_dir_path > config
-		fi
+ko() {
+	printf "\n${RED}KO! ${CLEAR}"
+
+	local decimal_places=2
+
+	local percent_passed=$(echo "scale=$decimal_places ; 100 * $TESTS_PASSED / $TOTAL_NTESTS" | bc)
+	printf "[${GREEN}Tests passed: $TESTS_PASSED/$TOTAL_NTESTS / $percent_passed%%${CLEAR}] :: "
+
+	local percent_failed=$(echo "scale=$decimal_places ; 100 * $TESTS_FAILED / $TOTAL_NTESTS" | bc)
+	printf "[${RED}Tests failed: $TESTS_FAILED/$TOTAL_NTESTS / $percent_failed%%${CLEAR}]\n"
+}
 	fi
 
 	if test -f $minishell_dir_path/minishell
@@ -153,9 +162,7 @@ test-minishell () {
 
 		if [ $TESTS_PASSED -ne $TOTAL_NTESTS ]
 		then
-			printf "\n${RED}KO! ${CLEAR}"
-			printf "[${GREEN}Tests passed: $TESTS_PASSED/$TOTAL_NTESTS${CLEAR}] :: "
-			printf "[${RED}Tests failed: $TESTS_FAILED/$TOTAL_NTESTS${CLEAR}]\n"
+			ko
 		else
 			printf "\nAll [${GREEN}$TOTAL_NTESTS${CLEAR}] tests passed! 🚀\n"
 		fi
