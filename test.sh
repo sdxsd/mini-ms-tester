@@ -117,7 +117,10 @@ test-minishell () {
 	else
 		echo "Enter path to minishell binary:"
 		read mspath
-		echo $mspath > config
+
+		# This allows both relative and absolute paths
+		cd $mspath
+		pwd > config
 	fi
 
 	if test -f $mspath;
