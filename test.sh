@@ -62,21 +62,21 @@ run-test () {
 	echo $? >> $results_path/minishell_output
 
 	# TODO: Think of a proper fix for symlinking to replace this with
-	# < /tmp/minishell_output sed -i "" -E "s/\/private\/tmp/\/tmp/g" /tmp/minishell_output
+	# perl -i -p -e "s/\/private\/tmp/\/tmp/g" $results_path/minishell_output
 
 	< $test_path bash &> $results_path/bash_output
 	echo $? >> $results_path/bash_output
 
 	# This makes it so the tester isn't required to have the bash prefix nor line number
-	< $results_path/bash_output sed -i "" -E "s/bash: line [0-9]+/λ/g" $results_path/bash_output
+	perl -i -p -e "s/bash: line [0-9]+/λ/g" $results_path/bash_output
 
 	# TODO: This is choosing to ignore the special bash `_` parameter; discuss whether this is desired
-	< $results_path/minishell_output sed -i "" -E "s/_=.*/_=IGNORED/g" $results_path/minishell_output
-	< $results_path/bash_output sed -i "" -E "s/_=.*/_=IGNORED/g" $results_path/bash_output
+	perl -i -p -e "s/_=.*/_=IGNORED/g" $results_path/minishell_output
+	perl -i -p -e "s/_=.*/_=IGNORED/g" $results_path/bash_output
 
 	# TODO: This is choosing to ignore the SHLVL environment variable; discuss whether this is desired
-	< $results_path/minishell_output sed -i "" -E "s/SHLVL=.*/SHLVL=IGNORED/g" $results_path/minishell_output
-	< $results_path/bash_output sed -i "" -E "s/SHLVL=.*/SHLVL=IGNORED/g" $results_path/bash_output
+	perl -i -p -e "s/SHLVL=.*/SHLVL=IGNORED/g" $results_path/minishell_output
+	perl -i -p -e "s/SHLVL=.*/SHLVL=IGNORED/g" $results_path/bash_output
 
 	diff -y $results_path/minishell_output $results_path/bash_output > $results_path/diff_output
 
