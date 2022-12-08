@@ -83,7 +83,7 @@ run-test () {
 	local test_path=$1
 
 	((++TOTAL_NTESTS))
-	< $test_path $minishell_dir_path/minishell &> $results_path/minishell_output
+	< $test_path $minishell_path &> $results_path/minishell_output
 	echo $? >> $results_path/minishell_output
 
 	# TODO: Think of a proper fix for symlinking to replace this with
@@ -112,18 +112,23 @@ run-test () {
 	fi
 }
 
-ask_for_minishell_dir_path() {
-	echo "Enter a relative or absolute path to your minishell directory:"
-	read minishell_dir_path
+ask_for_minishell_path() {
+	echo "Enter a relative or absolute path to your minishell directory or executable:"
+	read minishell_path
 
-	# Resolves relative paths and saves to config file
-	if test -f $minishell_dir_path/minishell
+	if test -d $minishell_path
 	then
-		cd $minishell_dir_path
-		minishell_dir_path=$(pwd)
+		minishell_path=$minishell_path/minishell
+	fi
+
+	# Resolves path and saves to config file
+	if test -f $minishell_path
+	then
+		cd $(dirname $minishell_path)
+		minishell_path=$(pwd)/minishell
 		cd $tester_dir_path
 
-		echo $minishell_dir_path > config
+		echo $minishell_path > config
 	fi
 }
 
@@ -146,12 +151,12 @@ test-minishell () {
 
 	if test -f "config"
 	then
-		minishell_dir_path=$(< config)
+		minishell_path=$(< config)
 	else
-		ask_for_minishell_dir_path
+		ask_for_minishell_path
 	fi
 
-	if test -f $minishell_dir_path/minishell
+	if test -f $minishell_path
 	then
 		exports
 
@@ -178,7 +183,7 @@ test-minishell () {
 			printf "\nAll [${GREEN}$TOTAL_NTESTS${CLEAR}] tests passed! 🚀\n"
 		fi
 	else
-		echo "A minishell executable doesn't exist at the provided directory path. Have you compiled minishell?"
+		echo "A minishell directory or executable doesn't exist at the provided path. Have you compiled minishell?"
 		echo "Run test.sh again to proceed."
 	fi
 }

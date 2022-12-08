@@ -4,17 +4,16 @@ This project aims to automate the process of testing minishell during developmen
 
 ![Example Image](example.png "Usage example")
 
-# Use
-1. Clone repo
-2. Execute test.sh
-3. Provide path to minishell executable
-3. Watch the testing happen.
+# Usage
+1. Clone this repository.
+2. Execute `./test.sh`.
+3. Provide the path to your minishell directory or executable.
 
 # Options
-Run test.sh with -eof flag for the tester to exit on the first failed test. 
+Run `test.sh` with an `-eof` flag for the tester to exit on the first failed test.
 
 # License
-This tester is licensed under the GNU GPLv3 this provides the following four freedoms to the user:	
+This tester is licensed under the GNU GPLv3 this provides the following four freedoms to the user:
 - The freedom to run the program, for any purpose.
 - The freedom to study how the program works, and adapt it to your needs.
 - The freedom to redistribute copies so you can help your neighbor.
