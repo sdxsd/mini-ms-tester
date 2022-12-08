@@ -40,6 +40,8 @@ TOTAL_NTESTS=0
 
 exports () {
 	export dollar_in_env='a$b'
+	export single_quote_in_env='a'"'"'b'
+	export double_quote_in_env='a"b'
 	export no_whitespace="no_whitespace"
 
 	export whitespace_left=" whitespace"
