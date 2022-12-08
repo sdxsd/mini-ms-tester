@@ -56,19 +56,7 @@ compile-programs () {
 	gcc -Wall -Wextra -Werror -g programs/argv.c -o programs/argv
 }
 
-run-test () {
-	local test_path=$1
-
-	((++TOTAL_NTESTS))
-	< $test_path $minishell_dir_path/minishell &> $results_path/minishell_output
-	echo $? >> $results_path/minishell_output
-
-	# TODO: Think of a proper fix for symlinking to replace this with
-	# perl -i -p -e "s/\/private\/tmp/\/tmp/g" $results_path/minishell_output
-
-	< $test_path bash &> $results_path/bash_output
-	echo $? >> $results_path/bash_output
-
+dont-compare-these() {
 	# This makes it so the tester isn't required to have the bash prefix nor line number
 	perl -i -p -e "s/bash: line [0-9]+/λ/g" $results_path/bash_output
 
@@ -89,6 +77,22 @@ run-test () {
 	# From running `env`
 	perl -i -p -e "s/OLDPWD=.*\n//" $results_path/minishell_output
 	perl -i -p -e "s/OLDPWD=.*\n//" $results_path/bash_output
+}
+
+run-test () {
+	local test_path=$1
+
+	((++TOTAL_NTESTS))
+	< $test_path $minishell_dir_path/minishell &> $results_path/minishell_output
+	echo $? >> $results_path/minishell_output
+
+	# TODO: Think of a proper fix for symlinking to replace this with
+	# perl -i -p -e "s/\/private\/tmp/\/tmp/g" $results_path/minishell_output
+
+	< $test_path bash &> $results_path/bash_output
+	echo $? >> $results_path/bash_output
+
+	dont-compare-these
 
 	diff -y $results_path/minishell_output $results_path/bash_output > $results_path/diff_output
 
@@ -108,24 +112,20 @@ run-test () {
 	fi
 }
 
-test-minishell () {
-	splash
+ask_for_minishell_dir_path() {
+	echo "Enter a relative or absolute path to your minishell directory:"
+	read minishell_dir_path
 
-	local tester_dir_path=$PWD
-
-	if test -f "config"
+	# Resolves relative paths and saves to config file
+	if test -f $minishell_dir_path/minishell
 	then
-		minishell_dir_path=$(< config)
-	else
-		echo "Enter a relative or absolute path to your minishell directory:"
-		read minishell_dir_path
+		cd $minishell_dir_path
+		minishell_dir_path=$(pwd)
+		cd $tester_dir_path
 
-		# Resolves relative paths and saves to config file
-		if test -f $minishell_dir_path/minishell
-		then
-			cd $minishell_dir_path
-			minishell_dir_path=$(pwd)
-			cd $tester_dir_path
+		echo $minishell_dir_path > config
+	fi
+}
 
 ko() {
 	printf "\n${RED}KO! ${CLEAR}"
@@ -138,6 +138,17 @@ ko() {
 	local percent_failed=$(echo "scale=$decimal_places ; 100 * $TESTS_FAILED / $TOTAL_NTESTS" | bc)
 	printf "[${RED}Tests failed: $TESTS_FAILED/$TOTAL_NTESTS / $percent_failed%%${CLEAR}]\n"
 }
+
+test-minishell () {
+	splash
+
+	local tester_dir_path=$PWD
+
+	if test -f "config"
+	then
+		minishell_dir_path=$(< config)
+	else
+		ask_for_minishell_dir_path
 	fi
 
 	if test -f $minishell_dir_path/minishell
