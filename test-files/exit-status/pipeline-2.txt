@@ -1,2 +1,4 @@
 rm .
-echo $? 1>&2 | echo $?
+echo $? >/tmp/pipeline-2-output | echo $? >>>/tmp/pipeline-2-output
+cat /tmp/pipeline-2-output
+rm /tmp/pipeline-2-output
