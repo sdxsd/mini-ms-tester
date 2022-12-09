@@ -169,7 +169,7 @@ test-minishell () {
 		local results_path=$tester_dir_path/results
 		mkdir -p $results_path
 
-		local test_files_path=$tester_dir_path/test-files
+		local test_files_path=$tester_dir_path/tests
 
 		for TEST in $(find $test_files_path -type f)
 		do
