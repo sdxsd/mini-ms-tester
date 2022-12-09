@@ -169,9 +169,10 @@ test-minishell () {
 		local results_path=$tester_dir_path/results
 		mkdir -p $results_path
 
-		local test_files_path=$tester_dir_path/tests
+		local tests_path=$tester_dir_path/tests
+		# local tests_path=$tester_dir_path/prioritized-tests
 
-		for TEST in $(find $test_files_path -type f)
+		for TEST in $(find $tests_path -type f)
 		do
 			run-test $TEST
 		done
