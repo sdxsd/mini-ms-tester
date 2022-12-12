@@ -54,6 +54,7 @@ exports () {
 
 compile-programs () {
 	gcc -Wall -Wextra -Werror -g programs/argv.c -o programs/argv
+	gcc -Wall -Wextra -Werror -g programs/envp.c -o programs/envp
 }
 
 dont-compare-these() {
