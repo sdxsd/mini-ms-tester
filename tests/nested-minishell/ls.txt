@@ -1,0 +1,2 @@
+$minishell_path
+ls

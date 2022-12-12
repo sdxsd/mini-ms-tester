@@ -50,6 +50,8 @@ exports () {
 
 	export empty=""
 	export space=" "
+
+	export minishell_path=$minishell_path
 }
 
 compile-programs () {
