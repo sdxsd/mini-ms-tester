@@ -1,0 +1,16 @@
+<< "EOF" cat
+$?
+EOF
+
+<< "EOF" cat
+"$?"
+EOF
+
+<< "EOF" cat
+'$?'
+EOF
+
+rm .
+<< "EOF" cat
+$?
+EOF

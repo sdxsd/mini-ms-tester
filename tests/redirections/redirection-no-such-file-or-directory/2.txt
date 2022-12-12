@@ -1,1 +1,1 @@
-echo a > "$foo" # bash: : No such file or directory
+echo a > "$foo"

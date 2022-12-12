@@ -1,0 +1,4 @@
+rm .
+echo $? >x | echo $? >>x
+cat x
+rm x

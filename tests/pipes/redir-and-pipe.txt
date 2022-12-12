@@ -1,3 +1,2 @@
 ls > /tmp/whyareyoulooking
 sort < /tmp/whyareyoulooking | grep t
-
