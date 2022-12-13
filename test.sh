@@ -43,6 +43,7 @@ exports () {
 	export single_quote_in_env='a'"'"'b'
 	export double_quote_in_env='a"b'
 	export no_whitespace="no_whitespace"
+	export equals="a=b"
 
 	export whitespace_left=" whitespace"
 	export whitespace_center="white space"
@@ -60,8 +61,9 @@ compile-programs () {
 }
 
 dont-compare-these() {
-	# This makes it so the tester isn't required to have the bash prefix nor line number
-	perl -i -p -e "s/bash: line [0-9]+/λ/g" $results_path/bash_output
+	# Makes minishell not required to print the bash prefix nor line number
+	perl -i -p -e "s/$minishell_prefix: line [0-9]+/$minishell_prefix/g" $results_path/minishell_output
+	perl -i -p -e "s/bash: line [0-9]+/$minishell_prefix/g" $results_path/bash_output
 
 	# TODO: This is choosing to ignore the special bash `_` parameter; discuss whether this is desired
 	perl -i -p -e "s/_=.*/_=IGNORED/g" $results_path/minishell_output
@@ -124,14 +126,25 @@ ask_for_minishell_path() {
 		minishell_path=$minishell_path/minishell
 	fi
 
-	# Resolves path and saves to config file
+	# Resolves minishell_path and then saves it to a file
 	if test -f $minishell_path
 	then
 		cd $(dirname $minishell_path)
 		minishell_path=$(pwd)/minishell
 		cd $tester_dir_path
 
-		echo $minishell_path > config
+		echo $minishell_path > minishell_path
+	fi
+}
+
+ask_for_minishell_prefix() {
+	echo "Enter your minishell prefix. In Bash it's 'bash', so you probably use 'minishell'"
+	read minishell_prefix
+
+	# This check prevents a file from being created on Ctrl + D or pressing Enter immediately
+	if [[ $minishell_prefix != "" ]]
+	then
+		echo $minishell_prefix > minishell_prefix
 	fi
 }
 
@@ -147,48 +160,70 @@ ko() {
 	printf "[${RED}Tests failed: $TESTS_FAILED/$TOTAL_NTESTS / $percent_failed%%${CLEAR}]\n"
 }
 
+get_minishell_path() {
+	if test -f "minishell_path"
+	then
+		minishell_path=$(< minishell_path)
+	else
+		ask_for_minishell_path
+	fi
+
+	if [[ ! -f $minishell_path ]]
+	then
+		echo "A minishell directory or executable doesn't exist at the provided path. Have you compiled minishell?"
+		echo "Run test.sh again to proceed."
+		exit
+	fi
+}
+
+get_minishell_prefix() {
+	if test -f "minishell_prefix"
+	then
+		minishell_prefix=$(< minishell_prefix)
+	else
+		ask_for_minishell_prefix
+	fi
+
+	if [[ $minishell_prefix == "" ]]
+	then
+		echo "You need to enter a minishell prefix."
+		echo "Run test.sh again to proceed."
+		exit
+	fi
+}
+
 test-minishell () {
 	splash
 
 	local tester_dir_path=$PWD
 
-	if test -f "config"
+	get_minishell_path
+	get_minishell_prefix
+
+	exports
+
+	compile-programs
+
+	# This ensures that files wrongly created by minishell don't end up inside of this tester
+	cd /tmp
+
+	# Makes the diff files easy to find
+	local results_path=$tester_dir_path/results
+	mkdir -p $results_path
+
+	# local tests_path=$tester_dir_path/tests
+	local tests_path=$tester_dir_path/prioritized-tests
+
+	for TEST in $(find $tests_path -type f)
+	do
+		run-test $TEST
+	done
+
+	if [ $TESTS_PASSED -ne $TOTAL_NTESTS ]
 	then
-		minishell_path=$(< config)
+		ko
 	else
-		ask_for_minishell_path
-	fi
-
-	if test -f $minishell_path
-	then
-		exports
-
-		compile-programs
-
-		# This ensures that files wrongly created by minishell don't end up inside of this tester
-		cd /tmp
-
-		# Makes the diff files easy to find
-		local results_path=$tester_dir_path/results
-		mkdir -p $results_path
-
-		local tests_path=$tester_dir_path/tests
-		# local tests_path=$tester_dir_path/prioritized-tests
-
-		for TEST in $(find $tests_path -type f)
-		do
-			run-test $TEST
-		done
-
-		if [ $TESTS_PASSED -ne $TOTAL_NTESTS ]
-		then
-			ko
-		else
-			printf "\nAll [${GREEN}$TOTAL_NTESTS${CLEAR}] tests passed! 🚀\n"
-		fi
-	else
-		echo "A minishell directory or executable doesn't exist at the provided path. Have you compiled minishell?"
-		echo "Run test.sh again to proceed."
+		printf "\nAll [${GREEN}$TOTAL_NTESTS${CLEAR}] tests passed! 🚀\n"
 	fi
 }
 
