@@ -212,7 +212,12 @@ test-minishell () {
 	compile-programs
 
 	# This ensures that files wrongly created by minishell don't end up inside of this tester
-	cd /tmp
+	if [[ $(uname) == "Darwin" ]]
+	then
+		cd /private/tmp
+	else
+		cd /tmp
+	fi
 
 	# Makes the diff files easy to find
 	local results_path=$tester_dir_path/results
