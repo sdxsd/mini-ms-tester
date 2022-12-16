@@ -11,7 +11,8 @@ This project aims to automate the process of testing minishell during developmen
 4. Provide your minishell prefix.
 
 # Options
-Run `test.sh` with an `-eof` flag for the tester to exit on the first failed test.
+Run `test.sh -e` for the tester to exit on the first failed test.
+Run `test.sh -e cat` for the tester to exit on the first failed test in the `cat` directory.
 
 # License
 This tester is licensed under the GNU GPLv3 this provides the following four freedoms to the user:

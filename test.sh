@@ -31,7 +31,7 @@ RED="\033[0;31m"
 GREEN="\033[0;32m"
 
 # OPTIONS
-END_ON_FAIL=0
+exit_on_failure=0
 
 # COUNTERS
 TESTS_FAILED=0
@@ -113,7 +113,7 @@ run-test () {
 		cat $results_path/diff_output >&2
 		((++TESTS_FAILED))
 
-		if [ $END_ON_FAIL -eq 1 ]
+		if [ $exit_on_failure -eq 1 ]
 		then
 			exit
 		fi
@@ -203,8 +203,6 @@ make-minishell () {
 test-minishell () {
 	splash
 
-	local tester_dir_path=$PWD
-
 	get_minishell_path
 	get_minishell_prefix
 
@@ -226,9 +224,6 @@ test-minishell () {
 	local results_path=$tester_dir_path/results
 	mkdir -p $results_path
 
-	local tests_path=$tester_dir_path/tests
-	# local tests_path=$tester_dir_path/prioritized-tests
-
 	for TEST in $(find $tests_path -type f)
 	do
 		run-test $TEST
@@ -242,12 +237,29 @@ test-minishell () {
 	fi
 }
 
-# Checks if argument has been passed.
-if [ $# -eq 1 ]
-then
-	if [ $1 = "-eof" ]
-	then
-		END_ON_FAIL=1
-	fi
-fi
+usage () {
+	printf "Usage: %s [-e] <tests_dir_path>\n" $0
+	exit 2
+}
+
+# Source: https://stackoverflow.com/a/49573433/13279557
+exit_on_failure=0
+while getopts e name
+do
+    case $name in
+    e) exit_on_failure=1;;
+    ?) usage;;
+    esac
+done
+
+# Source: https://unix.stackexchange.com/a/214151/544554
+# "shift n removes n strings from the positional parameters list.
+# Thus shift $((OPTIND-1)) removes all the options that have been parsed
+# by getopts from the parameters list, and so after that point,
+# $1 will refer to the first non-option argument passed to the script."
+shift $(($OPTIND - 1))
+
+tester_dir_path=$PWD
+tests_path=$tester_dir_path/tests/$1
+
 test-minishell
