@@ -238,7 +238,7 @@ test-minishell () {
 }
 
 usage () {
-	printf "Usage: %s [-e] <tests_dir_path>\n" $0
+	printf "Usage: %s [-e] <test_or_tests_dir_path>\n" $0
 	exit 2
 }
 
@@ -247,8 +247,8 @@ exit_on_failure=0
 while getopts e name
 do
     case $name in
-    e) exit_on_failure=1;;
-    ?) usage;;
+		e) exit_on_failure=1;;
+		?) usage;;
     esac
 done
 
