@@ -1,0 +1,3 @@
+echo hi > foo | asd
+cat foo
+rm foo

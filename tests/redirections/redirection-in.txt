@@ -1,0 +1,3 @@
+ls > abc
+< abc sort
+rm abc

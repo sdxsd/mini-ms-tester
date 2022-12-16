@@ -1,0 +1,6 @@
+pwd > a > b
+cat a
+cat b
+ls
+rm a
+rm b

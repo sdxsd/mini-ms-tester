@@ -1,0 +1,2 @@
+export FOO=
+env | grep FOO

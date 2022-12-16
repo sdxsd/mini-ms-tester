@@ -1,0 +1,2 @@
+export FOO=BAR
+export | grep FOO

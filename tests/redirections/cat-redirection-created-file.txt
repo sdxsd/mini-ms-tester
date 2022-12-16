@@ -1,0 +1,3 @@
+ls > abc
+cat abc
+rm abc

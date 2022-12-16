@@ -1,0 +1,2 @@
+export FOO=a=b
+export | grep FOO

@@ -1,0 +1,3 @@
+touch exists
+< $exists < x echo
+rm exists
