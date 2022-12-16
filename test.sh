@@ -65,8 +65,13 @@ dont-compare-these () {
 	perl -i -p -e "s/$minishell_prefix: line [0-9]+/$minishell_prefix/g" $results_path/minishell_output
 	perl -i -p -e "s/bash: line [0-9]+/$minishell_prefix/g" $results_path/bash_output
 
-	# Makes minishell not required to print the original input causing the ambiguous redirect
+	# Makes minishell not required to print the original input causing the "ambiguous redirect"
+	perl -i -p -e "s/$minishell_prefix.*: ambiguous redirect/$minishell_prefix: ambiguous redirect/g" $results_path/minishell_output
 	perl -i -p -e "s/$minishell_prefix.*: ambiguous redirect/$minishell_prefix: ambiguous redirect/g" $results_path/bash_output
+
+	# Makes minishell not required to print the original file name causing the "no such file or directory"
+	perl -i -p -e "s/$minishell_prefix.*: No such file or directory/$minishell_prefix: No such file or directory/g" $results_path/minishell_output
+	perl -i -p -e "s/$minishell_prefix.*: No such file or directory/$minishell_prefix: No such file or directory/g" $results_path/bash_output
 
 	# TODO: This is choosing to ignore the special bash `_` parameter; discuss whether this is desired
 	perl -i -p -e "s/_=.*/_=IGNORED/g" $results_path/minishell_output
