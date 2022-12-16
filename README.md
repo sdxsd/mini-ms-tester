@@ -8,6 +8,7 @@ This project aims to automate the process of testing minishell during developmen
 1. Clone this repository.
 2. Execute `./test.sh`.
 3. Provide the path to your minishell directory or executable.
+4. Provide your minishell prefix.
 
 # Options
 Run `test.sh` with an `-eof` flag for the tester to exit on the first failed test.
