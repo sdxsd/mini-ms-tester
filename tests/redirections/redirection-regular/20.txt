@@ -1,0 +1,2 @@
+echo a > "$whitespace_left""foo"
+rm " whitespacefoo"
