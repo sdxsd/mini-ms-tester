@@ -92,6 +92,23 @@ dont-compare-these () {
 	perl -i -p -e "s/OLDPWD=.*\n//" $results_path/bash_output
 }
 
+set-diff-column-count () {
+	local minishell_longest_line_length=$(awk '{ if (length($0) > max) {max = length($0); maxline = $0} } END { print max }' $results_path/minishell_output)
+	local bash_longest_line_length=$(awk '{ if (length($0) > max) {max = length($0); maxline = $0} } END { print max }' $results_path/bash_output)
+
+	# Use the file with the longest line as the column count
+	diff_column_count=$(( minishell_longest_line_length > bash_longest_line_length ? minishell_longest_line_length * 2 + 10 : bash_longest_line_length * 2 + 10 ))
+}
+
+print-minishell-and-bash-titles () {
+	printf "${RED}minishell${CLEAR}"
+	for _ in $( seq 1 $(( $diff_column_count / 2 - 7 )) )
+	do
+		echo -n " "
+	done
+	printf "${GREEN}bash${CLEAR}\n"
+}
+
 run-test () {
 	local test_path=$1
 
@@ -107,7 +124,9 @@ run-test () {
 
 	dont-compare-these
 
-	diff -y $results_path/minishell_output $results_path/bash_output > $results_path/diff_output
+	set-diff-column-count
+
+	diff -y -t -W $diff_column_count $results_path/minishell_output $results_path/bash_output > $results_path/diff_output
 
 	if [ $? -eq 0 ]
 	then
@@ -115,7 +134,14 @@ run-test () {
 		((++TESTS_PASSED))
 	else
 		printf "${RED}Different output${CLEAR} in test '${GREEN}$1${CLEAR}'${CLEAR}:\n" >&2
+
+		cat $test_path
+
+		print-minishell-and-bash-titles
+
 		cat $results_path/diff_output >&2
+		echo ""
+
 		((++TESTS_FAILED))
 
 		if [ $exit_on_failure -eq 1 ]
