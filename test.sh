@@ -60,36 +60,46 @@ compile-programs () {
 	gcc -Wall -Wextra -Werror -g programs/envp.c -o programs/envp
 }
 
-dont-compare-these () {
+modify-result () {
+	# -i will let perl edit the output files in-place
+	# -0 allows having multi-line regex replacements
+	# -p is necessary for some reason for the output file to be read
+	# -e enables passing a command, instead of reading a script from a file
+	perl -i -0pe "s/$1/$2/g" $results_path/minishell_output
+	perl -i -0pe "s/$1/$2/g" $results_path/bash_output
+}
+
+modify-results () {
 	# Makes minishell not required to print the bash prefix nor line number
-	perl -i -p -e "s/$minishell_prefix: line [0-9]+/$minishell_prefix/g" $results_path/minishell_output
-	perl -i -p -e "s/bash: line [0-9]+/$minishell_prefix/g" $results_path/bash_output
+	perl -i -pe "s/$minishell_prefix: line [0-9]+/$minishell_prefix/g" $results_path/minishell_output
+	perl -i -pe "s/bash: line [0-9]+/$minishell_prefix/g" $results_path/bash_output
 
 	# Makes minishell not required to print the original input causing the "ambiguous redirect"
-	perl -i -p -e "s/$minishell_prefix.*: ambiguous redirect/$minishell_prefix: ambiguous redirect/g" $results_path/minishell_output
-	perl -i -p -e "s/$minishell_prefix.*: ambiguous redirect/$minishell_prefix: ambiguous redirect/g" $results_path/bash_output
+	modify-result "$minishell_prefix.*: ambiguous redirect" "$minishell_prefix: ambiguous redirect"
 
 	# Makes minishell not required to print the original file name causing the "no such file or directory"
-	perl -i -p -e "s/$minishell_prefix.*: No such file or directory/$minishell_prefix: No such file or directory/g" $results_path/minishell_output
-	perl -i -p -e "s/$minishell_prefix.*: No such file or directory/$minishell_prefix: No such file or directory/g" $results_path/bash_output
+	modify-result "$minishell_prefix.*: No such file or directory" "$minishell_prefix: No such file or directory"
 
 	# TODO: This is choosing to ignore the special bash `_` parameter; discuss whether this is desired
-	perl -i -p -e "s/_=.*/_=IGNORED/g" $results_path/minishell_output
-	perl -i -p -e "s/_=.*/_=IGNORED/g" $results_path/bash_output
+	modify-result "_=.*" "_=IGNORED"
 
 	# TODO: This is choosing to ignore the SHLVL environment variable; discuss whether this is desired
-	perl -i -p -e "s/SHLVL=.*/SHLVL=IGNORED/g" $results_path/minishell_output
-	perl -i -p -e "s/SHLVL=.*/SHLVL=IGNORED/g" $results_path/bash_output
+	modify-result "SHLVL=.*" "SHLVL=IGNORED"
 
 	# This is choosing to ignore OLDPWD since it has really weird behavior in bash,
 	# like not being printed with `env` the first time, but being printed with `export` the first time:
 	# https://unix.stackexchange.com/questions/242909/why-does-bash-clear-oldpwd-when-a-child-script-is-started
 	# From running `export`
-	perl -i -p -e "s/declare -x OLDPWD.*/declare -x OLDPWD=IGNORED/g" $results_path/minishell_output
-	perl -i -p -e "s/declare -x OLDPWD.*/declare -x OLDPWD=IGNORED/g" $results_path/bash_output
+	modify-result "declare -x OLDPWD.*" "declare -x OLDPWD=IGNORED"
 	# From running `env`
-	perl -i -p -e "s/OLDPWD=.*\n//" $results_path/minishell_output
-	perl -i -p -e "s/OLDPWD=.*\n//" $results_path/bash_output
+	modify-result "OLDPWD=.*\n" ""
+
+	# Makes minishell not required to print the syntax error that occurred
+	modify-result "$minishell_prefix: syntax error near unexpected token.*\n$minishell_prefix:.*" "$minishell_prefix: syntax error"
+	modify-result "$minishell_prefix: syntax error.*" "$minishell_prefix: syntax error"
+
+	# Makes minishell not required to print the unmatched quote syntax error exactly
+	modify-result "$minishell_prefix: unexpected EOF while looking for matching.*" "$minishell_prefix: unexpected EOF while looking for matching"
 }
 
 set-diff-column-count () {
@@ -122,7 +132,7 @@ run-test () {
 	< $test_path bash &> $results_path/bash_output
 	echo $? >> $results_path/bash_output
 
-	dont-compare-these
+	modify-results
 
 	set-diff-column-count
 
