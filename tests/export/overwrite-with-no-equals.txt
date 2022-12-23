@@ -1,0 +1,4 @@
+export a="x"
+echo $a
+export a
+echo $a
