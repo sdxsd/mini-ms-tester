@@ -121,15 +121,21 @@ print-minishell-and-bash-titles () {
 
 run-test () {
 	local test_path=$1
+	local modified_test_path=$results_path/test_file
+
+	# This makes sure that the program hasn't exited after the test
+	# TODO: Adding this might hide issues, but I'll need to think more about that
+	cp $test_path $modified_test_path
+	printf "\necho a" >> $modified_test_path
 
 	((++TOTAL_NTESTS))
-	< $test_path $minishell_path &> $results_path/minishell_output
+	< $modified_test_path $minishell_path &> $results_path/minishell_output
 	echo $? >> $results_path/minishell_output
 
 	# TODO: Think of a proper fix for symlinking to replace this with
 	# perl -i -p -e "s/\/private\/tmp/\/tmp/g" $results_path/minishell_output
 
-	< $test_path bash &> $results_path/bash_output
+	< $modified_test_path bash &> $results_path/bash_output
 	echo $? >> $results_path/bash_output
 
 	modify-results
@@ -145,7 +151,7 @@ run-test () {
 	else
 		printf "${RED}Different output${CLEAR} in test '${GREEN}$1${CLEAR}'${CLEAR}:\n" >&2
 
-		cat -e $test_path
+		cat -e $modified_test_path
 
 		print-minishell-and-bash-titles
 
