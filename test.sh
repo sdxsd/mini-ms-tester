@@ -145,7 +145,7 @@ run-test () {
 	else
 		printf "${RED}Different output${CLEAR} in test '${GREEN}$1${CLEAR}'${CLEAR}:\n" >&2
 
-		cat $test_path
+		cat -e $test_path
 
 		print-minishell-and-bash-titles
 
