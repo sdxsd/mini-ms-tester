@@ -123,8 +123,6 @@ run-test () {
 	local test_path=$1
 	local modified_test_path=$results_path/test_file
 
-	# This makes sure that the program hasn't exited after the test
-	# TODO: Adding this might hide issues, but I'll need to think more about that
 	cp $test_path $modified_test_path
 	if [ "$append_echo_a" -eq 1 ]
 	then

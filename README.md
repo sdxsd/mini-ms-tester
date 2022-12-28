@@ -11,10 +11,12 @@ This project aims to automate the process of testing minishell during developmen
 4. Enter your minishell prefix. In Bash it's `bash`, so you probably use `minishell`.
 
 ## Advanced usage
-Run `./test.sh -e` for the tester to exit on the first failed test.
-Run `./test.sh -a` for the tester to append `echo a` to the end of every test.
-Run `./test.sh -e cat` for the tester to exit on the first failed test in the `cat` directory.
 Run `./test.sh cat/cat-me.txt` for the tester to run the `cat/cat-me.txt` test.
+
+Run `./test.sh -e` for the tester to exit on the first failed test.
+Run `./test.sh -e cat` for the tester to exit on the first failed test in the `cat` directory.
+
+Run `./test.sh -a` for the tester to append `echo a` to the end of every test. This is for example for useful checking whether `exit` didn't immediately exit the tester. You don't always want to enable this option however, since tests like empty.txt will be ruined by appending `echo a` to the end.
 
 # License
 This tester is licensed under the GNU GPLv3 this provides the following four freedoms to the user:
