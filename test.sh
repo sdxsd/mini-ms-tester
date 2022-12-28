@@ -126,7 +126,10 @@ run-test () {
 	# This makes sure that the program hasn't exited after the test
 	# TODO: Adding this might hide issues, but I'll need to think more about that
 	cp $test_path $modified_test_path
-	printf "\necho a" >> $modified_test_path
+	if [ "$append_echo_a" -eq 1 ]
+	then
+		printf "\necho a" >> $modified_test_path
+	fi
 
 	((++TOTAL_NTESTS))
 	< $modified_test_path $minishell_path &> $results_path/minishell_output
@@ -291,10 +294,12 @@ usage () {
 
 # Source: https://stackoverflow.com/a/49573433/13279557
 exit_on_failure=0
-while getopts e name
+append_echo_a=0
+while getopts ea name
 do
     case $name in
 		e) exit_on_failure=1;;
+		a) append_echo_a=1;;
 		?) usage;;
     esac
 done
