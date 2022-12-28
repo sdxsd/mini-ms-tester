@@ -111,7 +111,7 @@ set-diff-column-count () {
 }
 
 print-minishell-and-bash-titles () {
-	printf "${RED}minishell${CLEAR}"
+	printf "\n${RED}minishell${CLEAR}"
 	for _ in $( seq 1 $(( $diff_column_count / 2 - 7 )) )
 	do
 		echo -n " "
@@ -139,7 +139,10 @@ run-test () {
 	< $modified_test_path bash &> $results_path/bash_output
 	echo $? >> $results_path/bash_output
 
-	modify-results
+	if [ "$dont_modify_results" -eq 0 ]
+	then
+		modify-results
+	fi
 
 	set-diff-column-count
 
@@ -293,11 +296,13 @@ usage () {
 # Source: https://stackoverflow.com/a/49573433/13279557
 exit_on_failure=0
 append_echo_a=0
-while getopts ea name
+dont_modify_results=0
+while getopts eam name
 do
     case $name in
 		e) exit_on_failure=1;;
 		a) append_echo_a=1;;
+		m) dont_modify_results=1;;
 		?) usage;;
     esac
 done

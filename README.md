@@ -18,6 +18,8 @@ Run `./test.sh -e cat` for the tester to exit on the first failed test in the `c
 
 Run `./test.sh -a` for the tester to append `echo a` to the end of every test. This is for example for useful checking whether `exit` didn't immediately exit the tester. You don't always want to enable this option however, since tests like empty.txt will be ruined by appending `echo a` to the end.
 
+Run `./test.sh -m` for the tester *not* to modify the Bash and minishell result files. The modifications are enabled by default since it makes the tester more lenient on Bash-specific error messages and such, but sometimes you might want to compare the unmodified results.
+
 # License
 This tester is licensed under the GNU GPLv3 this provides the following four freedoms to the user:
 - The freedom to run the program, for any purpose.
