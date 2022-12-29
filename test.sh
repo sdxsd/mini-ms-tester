@@ -275,7 +275,7 @@ test-minishell () {
 	local results_path=$tester_dir_path/results
 	mkdir -p $results_path
 
-	for TEST in $(find $tests_path -type f)
+	for TEST in $(find $test_directories_and_files -type f)
 	do
 		run-test $TEST
 	done
@@ -315,6 +315,18 @@ done
 shift $(($OPTIND - 1))
 
 tester_dir_path=$PWD
-tests_path=$tester_dir_path/tests/$1
+
+# Collects all user passed directories and files and prepends the tests/ path
+# Source: https://stackoverflow.com/a/38558776/13279557
+set -- "${@/#/$tester_dir_path/tests/}"
+test_directories_and_files=$@
+
+# If the user didn't pass any directories nor files, runs all tests
+if [[ $test_directories_and_files == "" ]]
+then
+	test_directories_and_files=$tester_dir_path/tests
+fi
+
+echo $test_directories_and_files
 
 test-minishell

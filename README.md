@@ -13,6 +13,8 @@ This project aims to automate the process of testing minishell during developmen
 ## Advanced usage
 Run `./test.sh cat/cat-me.txt` for the tester to run the `cat/cat-me.txt` test.
 
+Run `./test.sh env cat/cat-me.txt` for the tester to run the tests in the `env` directory and the `cat/cat-me.txt` test.
+
 Run `./test.sh -e` for the tester to exit on the first failed test.
 Run `./test.sh -e cat` for the tester to exit on the first failed test in the `cat` directory.
 
