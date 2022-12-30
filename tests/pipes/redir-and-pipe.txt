@@ -1,2 +1,3 @@
 ls > /tmp/whyareyoulooking
 sort < /tmp/whyareyoulooking | grep t
+rm /tmp/whyareyoulooking
