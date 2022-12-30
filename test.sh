@@ -211,6 +211,15 @@ ko () {
 	printf "[${RED}Tests failed: $TESTS_FAILED/$TOTAL_NTESTS / $percent_failed%%${CLEAR}]\n"
 }
 
+make-minishell () {
+	if test -d $minishell_path
+	then
+		make -C $minishell_path
+	else
+		make -C $(dirname $minishell_path)
+	fi
+}
+
 get_minishell_path () {
 	if test -f "minishell_path"
 	then
@@ -219,10 +228,11 @@ get_minishell_path () {
 		ask_for_minishell_path
 	fi
 
+	make-minishell
+
 	if [[ ! -f $minishell_path ]]
 	then
 		echo "A minishell directory or executable doesn't exist at the provided path."
-		echo "Have you compiled minishell?"
 		echo "Run test.sh again to proceed."
 		exit
 	fi
@@ -244,10 +254,6 @@ get_minishell_prefix () {
 	fi
 }
 
-make-minishell () {
-	make -C $(dirname $minishell_path)
-}
-
 test-minishell () {
 	splash
 
@@ -255,8 +261,6 @@ test-minishell () {
 	get_minishell_prefix
 
 	exports
-
-	make-minishell
 
 	compile-programs
 
@@ -323,7 +327,5 @@ if [[ $test_directories_and_files == "" ]]
 then
 	test_directories_and_files=$tester_dir_path/tests
 fi
-
-echo $test_directories_and_files
 
 test-minishell
