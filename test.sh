@@ -77,9 +77,6 @@ modify-results () {
 	# Makes minishell not required to print the original input causing the "ambiguous redirect"
 	modify-result "$minishell_prefix.*: ambiguous redirect" "$minishell_prefix: ambiguous redirect"
 
-	# Makes minishell not required to print the original file name causing the "no such file or directory"
-	modify-result "$minishell_prefix.*: No such file or directory" "$minishell_prefix: No such file or directory"
-
 	# TODO: This is choosing to ignore the special bash `_` parameter; discuss whether this is desired
 	modify-result "_=.*" "_=IGNORED"
 
