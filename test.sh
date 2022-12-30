@@ -97,6 +97,9 @@ modify-results () {
 
 	# Makes minishell not required to print the unmatched quote syntax error exactly
 	modify-result "$minishell_prefix: unexpected EOF while looking for matching.*" "$minishell_prefix: unexpected EOF while looking for matching"
+
+	# Makes minishell not required to print the original input causing the "not a valid identifier"
+	modify-result "$minishell_prefix: .*: not a valid identifier" "$minishell_prefix: not a valid identifier"
 }
 
 set-diff-column-count () {
