@@ -1,3 +1,0 @@
-bash -c 'echo a | $empty'
-echo a | $empty
-echo a > $empty | echo

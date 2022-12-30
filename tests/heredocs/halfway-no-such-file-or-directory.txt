@@ -1,0 +1,1 @@
+<< eof1 cat < foo << eof2
