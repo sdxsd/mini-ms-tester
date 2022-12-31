@@ -1,3 +1,4 @@
-echo a >> /tmp/foo
-echo b >> /tmp/foo
-cat /tmp/foo
+rm foo
+echo a >> foo
+echo b >> foo
+cat foo

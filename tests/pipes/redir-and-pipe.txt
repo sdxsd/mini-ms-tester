@@ -1,3 +1,3 @@
-ls > /tmp/whyareyoulooking
-sort < /tmp/whyareyoulooking | grep t
-rm /tmp/whyareyoulooking
+ls > whyareyoulooking
+sort < whyareyoulooking | grep t
+rm whyareyoulooking

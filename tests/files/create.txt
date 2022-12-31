@@ -1,2 +1,2 @@
-echo a > /tmp/foo
-cat /tmp/foo
+echo a > foo
+cat foo

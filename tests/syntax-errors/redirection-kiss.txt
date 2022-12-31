@@ -1,1 +1,1 @@
-ls></tmp/abc 
+ls><abc

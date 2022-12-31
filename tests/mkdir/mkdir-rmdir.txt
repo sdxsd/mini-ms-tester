@@ -1,2 +1,2 @@
-mkdir /tmp/test
-rmdir /tmp/test
+mkdir test
+rmdir test
