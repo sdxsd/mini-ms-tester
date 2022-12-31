@@ -1,2 +1,2 @@
 export a=""
-echo foo $a bar
+ls foo $a bar

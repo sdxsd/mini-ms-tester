@@ -1,1 +1,1 @@
-echo a > 2>x
+echo a > 2 > x
