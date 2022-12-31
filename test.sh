@@ -77,6 +77,12 @@ modify-results () {
 	# Makes minishell not required to print the original input causing the "ambiguous redirect"
 	modify-result "$minishell_prefix.*: ambiguous redirect" "$minishell_prefix: ambiguous redirect"
 
+	# Makes minishell not required to print the original file name causing the "no such file or directory"
+	modify-result "$minishell_prefix.*: No such file or directory" "$minishell_prefix: No such file or directory"
+
+	# Makes minishell not required to print the original file name causing the "command not found"
+	modify-result "$minishell_prefix.*: command not found" "$minishell_prefix: command not found"
+
 	# TODO: This is choosing to completely ignore the special bash `_` parameter of env and export
 	modify-result "declare -x _=.*\n" ""
 	modify-result "_=.*\n" ""
