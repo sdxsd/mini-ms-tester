@@ -1,1 +1,1 @@
-echo 1$PATH$PATH-
+echo 1$USER$USER-
