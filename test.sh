@@ -77,8 +77,9 @@ modify-results () {
 	# Makes minishell not required to print the original input causing the "ambiguous redirect"
 	modify-result "$minishell_prefix.*: ambiguous redirect" "$minishell_prefix: ambiguous redirect"
 
-	# TODO: This is choosing to completely ignore the special bash `_` parameter
+	# TODO: This is choosing to completely ignore the special bash `_` parameter of env and export
 	modify-result "declare -x _=.*\n" ""
+	modify-result "_=.*\n" ""
 
 	# TODO: This is choosing to ignore the SHLVL environment variable
 	modify-result "SHLVL=.*" "SHLVL=IGNORED"
