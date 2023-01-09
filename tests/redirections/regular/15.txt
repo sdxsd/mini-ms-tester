@@ -1,2 +1,2 @@
-echo a > """"$whitespace_left
+echo a > ''$whitespace_left
 rm whitespace
