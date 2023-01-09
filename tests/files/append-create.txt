@@ -1,4 +1,3 @@
-rm foo
 echo a >> foo
 echo b >> foo
 cat foo

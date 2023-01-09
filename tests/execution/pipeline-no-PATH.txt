@@ -1,4 +1,3 @@
 unset PATH
 echo hi > foo | asd
 cat foo
-/bin/rm foo
