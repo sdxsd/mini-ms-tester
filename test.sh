@@ -295,7 +295,11 @@ test-minishell () {
 
 	for TEST in $(find $test_directories_and_files -type f)
 	do
+		mkdir test
+		cd test
 		run-test $TEST
+		cd ..
+		rm -r test
 	done
 
 	if [ $TESTS_PASSED -ne $TOTAL_NTESTS ]
