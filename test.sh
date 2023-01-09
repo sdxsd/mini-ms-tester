@@ -107,6 +107,13 @@ modify-results () {
 
 	# Makes minishell not required to print the original input causing the "not a valid identifier"
 	modify-result "$minishell_prefix: .*: not a valid identifier" "$minishell_prefix: not a valid identifier"
+
+	# Makes minishell not required to print "syntax error" after printing "unexpected EOF while looking for matching"
+	modify-result "$minishell_prefix: unexpected EOF while looking for matching\n$minishell_prefix: syntax error" "$minishell_prefix: unexpected EOF while looking for matching"
+
+	# Makes minishell not required to let heredoc input still happen even when its delimiter had a syntax error
+	# Fixes syntax-errors/unmatched-word-double-quote.txt and syntax-errors/unmatched-word-single-quote.txt
+	modify-result "$minishell_prefix: unexpected EOF while looking for matching\n$minishell_prefix: command not found\n$minishell_prefix: command not found\n127" "$minishell_prefix: unexpected EOF while looking for matching\n2"
 }
 
 set-diff-column-count () {
