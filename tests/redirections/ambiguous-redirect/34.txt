@@ -1,0 +1,1 @@
+echo a > foo''$whitespace_left

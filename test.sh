@@ -114,6 +114,9 @@ modify-results () {
 	# Makes minishell not required to let heredoc input still happen even when its delimiter had a syntax error
 	# Fixes syntax-errors/unmatched-word-double-quote.txt and syntax-errors/unmatched-word-single-quote.txt
 	modify-result "$minishell_prefix: unexpected EOF while looking for matching\n$minishell_prefix: command not found\n$minishell_prefix: command not found\n127" "$minishell_prefix: unexpected EOF while looking for matching\n2"
+
+	# For some reason lambdashell prints an extra < in front of this property, so remove it
+	modify-result "<<ORIGINAL_XDG_CURRENT_DESKTOP" "<ORIGINAL_XDG_CURRENT_DESKTOP"
 }
 
 set-diff-column-count () {
