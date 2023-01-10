@@ -146,12 +146,14 @@ run-test () {
 	((++TOTAL_NTESTS))
 	< $modified_test_path $minishell_path &> $results_path/minishell_output
 	echo $? >> $results_path/minishell_output
+	rm -f *
 
 	# TODO: Think of a proper fix for symlinking to replace this with
 	# perl -i -p -e "s/\/private\/tmp/\/tmp/g" $results_path/minishell_output
 
 	< $modified_test_path bash &> $results_path/bash_output
 	echo $? >> $results_path/bash_output
+	rm -f *
 
 	if [ "$dont_modify_results" -eq 0 ]
 	then
@@ -293,14 +295,14 @@ test-minishell () {
 	local results_path=$tester_dir_path/results
 	mkdir -p $results_path
 
+	mkdir -p test_env
+	cd test_env
 	for TEST in $(find $test_directories_and_files -type f)
 	do
-		mkdir test
-		cd test
 		run-test $TEST
-		cd ..
-		rm -r test
 	done
+	cd ..
+	rmdir test_env
 
 	if [ $TESTS_PASSED -ne $TOTAL_NTESTS ]
 	then
