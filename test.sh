@@ -146,14 +146,14 @@ run-test () {
 	((++TOTAL_NTESTS))
 	< $modified_test_path $minishell_path &> $results_path/minishell_output
 	echo $? >> $results_path/minishell_output
-	rm -f *
+	rm -rf ./*
 
 	# TODO: Think of a proper fix for symlinking to replace this with
 	# perl -i -p -e "s/\/private\/tmp/\/tmp/g" $results_path/minishell_output
 
 	< $modified_test_path bash &> $results_path/bash_output
 	echo $? >> $results_path/bash_output
-	rm -f *
+	rm -rf ./*
 
 	if [ "$dont_modify_results" -eq 0 ]
 	then

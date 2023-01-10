@@ -8,11 +8,9 @@ int main(int argc, char *argv[])
 
     while (*argv != NULL)
     {
-        printf("<%s> ", *argv);
+        printf("<%s>\n", *argv);
         argv++;
     }
-
-    printf("\n");
 
     return (EXIT_SUCCESS);
 }

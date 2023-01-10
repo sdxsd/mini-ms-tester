@@ -1,1 +1,1 @@
-/Users/sbos/Documents/Programming/Project-Testers/mini-ms-tester/programs/envp
+/Users/sbos/Documents/Programming/Project-Testers/mini-ms-tester/programs/envp | sort

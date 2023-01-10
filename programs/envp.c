@@ -9,11 +9,9 @@ int main(int argc, char *argv[], char *envp[])
 
     while (*envp != NULL)
     {
-        printf("<%s> ", *envp);
+        printf("<%s>\n", *envp);
         envp++;
     }
-
-    printf("\n");
 
     return (EXIT_SUCCESS);
 }
