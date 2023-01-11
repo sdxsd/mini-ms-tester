@@ -19,9 +19,6 @@ Run `./test.sh env cat/cat-me.txt` for the tester to run the tests in the `env` 
 Run `./test.sh -e` for the tester to exit on the first failed test.
 Run `./test.sh -e cat` for the tester to exit on the first failed test in the `cat` directory.
 
-### Appending `echo a` to the end of every test
-Run `./test.sh -a` for the tester to append `echo a` to the end of every test. This is for example for useful checking whether `exit` didn't immediately exit the tester. You don't always want to enable this option however, since tests like empty.txt will be ruined by appending `echo a` to the end.
-
 ### Telling this tester not to modify the results at all
 Run `./test.sh -m` for the tester *not* to modify the Bash and minishell result files. The modifications are enabled by default since it makes the tester more lenient on Bash-specific error messages and such, but sometimes you might want to compare the unmodified results.
 

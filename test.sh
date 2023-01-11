@@ -138,23 +138,16 @@ print-minishell-and-bash-titles () {
 
 run-test () {
 	local test_path=$1
-	local modified_test_path=$results_path/test_file
-
-	cp $test_path $modified_test_path
-	if [ "$append_echo_a" -eq 1 ]
-	then
-		printf "\necho a" >> $modified_test_path
-	fi
 
 	((++TOTAL_NTESTS))
-	< $modified_test_path $minishell_path &> $results_path/minishell_output
+	< $test_path $minishell_path &> $results_path/minishell_output
 	echo $? >> $results_path/minishell_output
 	rm -rf ./*
 
 	# TODO: Think of a proper fix for symlinking to replace this with
 	# perl -i -p -e "s/\/private\/tmp/\/tmp/g" $results_path/minishell_output
 
-	< $modified_test_path bash &> $results_path/bash_output
+	< $test_path bash &> $results_path/bash_output
 	echo $? >> $results_path/bash_output
 	rm -rf ./*
 
@@ -174,7 +167,7 @@ run-test () {
 	else
 		printf "${RED}Different output${CLEAR} in test '${GREEN}$1${CLEAR}'${CLEAR}:\n" >&2
 
-		cat -e $modified_test_path
+		cat -e $test_path
 
 		print-minishell-and-bash-titles
 
@@ -322,13 +315,11 @@ usage () {
 
 # Source: https://stackoverflow.com/a/49573433/13279557
 exit_on_failure=0
-append_echo_a=0
 dont_modify_results=0
-while getopts eam name
+while getopts em name
 do
     case $name in
 		e) exit_on_failure=1;;
-		a) append_echo_a=1;;
 		m) dont_modify_results=1;;
 		?) usage;;
     esac
