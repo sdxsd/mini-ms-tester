@@ -1,0 +1,1 @@
+echo -n -n a -n -n
