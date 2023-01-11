@@ -1,0 +1,1 @@
+echo -ana a -ana
