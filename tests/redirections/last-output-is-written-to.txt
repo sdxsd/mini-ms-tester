@@ -1,0 +1,10 @@
+> a > b echo x > c > d
+echo y
+cat a
+echo y
+cat b
+echo y
+cat c
+echo y
+cat d
+echo y
