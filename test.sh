@@ -70,9 +70,11 @@ modify-result () {
 }
 
 modify-results () {
+	# Replaces the bash prefix with the minishell prefix
+	modify-result "bash: " "$minishell_prefix: "
+
 	# Makes minishell not required to print the bash prefix nor line number
-	perl -i -pe "s/$minishell_prefix: line [0-9]+/$minishell_prefix/g" $results_path/minishell_output
-	perl -i -pe "s/bash: line [0-9]+/$minishell_prefix/g" $results_path/bash_output
+	modify-result "$minishell_prefix: line [0-9]+" "$minishell_prefix"
 
 	# Makes minishell not required to print the original input causing the "ambiguous redirect"
 	modify-result "$minishell_prefix.*: ambiguous redirect" "$minishell_prefix: ambiguous redirect"
