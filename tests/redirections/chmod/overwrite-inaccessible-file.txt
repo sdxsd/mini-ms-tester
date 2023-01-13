@@ -1,0 +1,3 @@
+echo a > foo
+chmod 0 foo
+echo b > foo
